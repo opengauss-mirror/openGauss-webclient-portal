@@ -13,9 +13,20 @@ export const routes = [
       return import('@/views/TheLogin.vue');
     },
   },
+  // webclient
+  {
+    path: '/home',
+    name: 'home',
+    component: () => {
+      return import('@/views/TheHome.vue');
+    },
+  },
 ];
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
