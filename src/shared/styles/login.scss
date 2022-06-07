@@ -1,0 +1,57 @@
+.authing-g2-render-module-modal .authing-ant-modal-content {
+  border-radius: 0 !important;
+}
+
+.authing-g2-input {
+  border-radius: 0 !important;
+}
+
+.authing-g2-submit-button {
+  border-radius: 0 !important;
+}
+
+.authing-g2-send-code-btn {
+  border-radius: 0 !important;
+}
+
+.authing-ant-btn.g2-guard-third-login-btn {
+  border-radius: 0 !important;
+}
+
+.g2-social-login-item {
+  border-radius: 0 !important;
+}
+
+.g2-view-container .g2-view-header .icon {
+  border-radius: 0 !important;
+}
+
+.authing-ant-btn-primary {
+  background-color: #7d32ea !important;
+  border-color: #7d32ea !important ;
+
+  &:hover {
+    border-color: #551db0 !important;
+    background-color: #551db0 !important;
+  }
+}
+
+.authing-ant-message-notice-content {
+  border-radius: 0 !important;
+}
+
+.g2-view-container {
+  border-radius: 0px;
+  padding: 0;
+
+  .g2-view-header {
+    // padding-top: 0;
+  }
+}
+.g2-social-login {
+  // margin-top: -100px;
+}
+
+p {
+  margin-bottom: 0;
+}
