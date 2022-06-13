@@ -36,3 +36,10 @@ export const useLoginStore = defineStore('login', {
     },
   },
 });
+
+// 用户信息
+export const useUserInfoStore = defineStore('user', {
+  id: '',
+  token: '',
+  subdomain: '',
+});

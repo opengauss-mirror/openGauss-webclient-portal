@@ -1,10 +1,11 @@
 <script setup>
-import { useLoginStore } from '@/stores';
+import { useLoginStore, useUserInfoStore } from '@/stores';
 import { onMounted, ref, watch } from 'vue';
 
 const loginStore = useLoginStore();
+const userInfoStore = useUserInfoStore();
 
-const clientSrc = ref('http://localhost:8081/');
+const clientSrc = ref('');
 const iframeIns = ref(null);
 onMounted(() => {
   const iframeWin = iframeIns.value.contentWindow;
@@ -15,10 +16,11 @@ onMounted(() => {
     },
     (val) => {
       if (val) {
+        clientSrc.value = userInfoStore.subdomain;
         iframeWin.postMessage(
           {
-            id: 'id',
-            token: 'token',
+            token: userInfoStore.token,
+            subdomain: userInfoStore.subdomain,
           },
           clientSrc.value
         );

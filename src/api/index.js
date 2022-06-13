@@ -34,3 +34,10 @@ export function queryUserInfo(params) {
     return res.data;
   });
 }
+
+export function querySubdomain(params) {
+  const url = '/api/playground/crd/resource';
+  return request.post(url, params).then((res) => {
+    return res.data;
+  });
+}
