@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 export const routes = [
   {
     path: '/',
-    redirect: '/login',
+    redirect: '/home',
   },
   // 登录页
   {

@@ -1,5 +1,5 @@
 <script setup>
-import { doLogin } from '@/shared/login';
+import { doLogin, goAuthorize } from '@/shared/login';
 
 import logoImg from '@/assets/logo.png';
 

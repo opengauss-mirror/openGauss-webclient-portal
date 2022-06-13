@@ -12,7 +12,7 @@ if (!loginStore.isLogined) {
   if (localStorage.getItem('_U_T_')) {
     doLogin();
   } else {
-    router.go('/login');
+    router.push('/login');
   }
 }
 

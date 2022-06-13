@@ -2,6 +2,7 @@
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { goAuthorize, logout } from '@/shared/login';
 import { querySubdomain } from '@/api';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
