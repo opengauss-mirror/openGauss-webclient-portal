@@ -1,5 +1,6 @@
 <script setup>
 import { useLoginStore, useUserInfoStore } from '@/stores';
+import { doLogin } from '@/shared/login';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -22,7 +23,7 @@ onMounted(() => {
 
   watch(
     () => {
-      return loginStore.isLogined;
+      return userInfoStore.subdomain;
     },
     (val) => {
       if (val) {
