@@ -33,7 +33,7 @@ onMounted(() => {
             token: userInfoStore.token,
             subdomain: userInfoStore.subdomain,
           },
-          clientSrc.value
+          '*'
         );
       }
     },
