@@ -8,7 +8,8 @@ import { useLoginStore, useUserInfoStore } from '@/stores';
 import config from '@/shared/config';
 
 import logoImg from '@/assets/logo.png';
-import { router } from '@/router';
+
+const router = useRouter();
 
 if (localStorage.getItem('_U_T_')) {
   doLogin();

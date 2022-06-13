@@ -1,9 +1,19 @@
 <script setup>
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
+const router = useRouter();
+
+if (!loginStore.isLogined) {
+  if (localStorage.getItem('_U_T_')) {
+    doLogin();
+  } else {
+    router.go('/login');
+  }
+}
 
 const clientSrc = ref('');
 const iframeIns = ref(null);
