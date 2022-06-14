@@ -1,7 +1,7 @@
 <script setup>
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { doLogin } from '@/shared/login';
-import { nextTick, onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const loginStore = useLoginStore();
@@ -16,9 +16,14 @@ if (!loginStore.isLogined) {
   }
 }
 
+const handleMessage = (data) => {
+  console.log(data);
+};
+
 const clientSrc = ref('');
 const iframeIns = ref(null);
 onMounted(() => {
+  const iframeDom = iframeIns.value;
   const iframeWin = iframeIns.value.contentWindow;
 
   watch(
@@ -28,19 +33,35 @@ onMounted(() => {
     (val) => {
       if (val) {
         clientSrc.value = userInfoStore.subdomain;
-        setTimeout(() => {
-          iframeWin.postMessage(
-            {
-              token: userInfoStore.token,
-              subdomain: userInfoStore.subdomain,
-            },
-            '*'
-          );
-        }, 500);
+        if (iframeDom.attachEvent) {
+          iframeDom.attachEvent('onload', function () {
+            iframeWin.postMessage(
+              {
+                token: userInfoStore.token,
+                subdomain: userInfoStore.subdomain,
+              },
+              '*'
+            );
+          });
+        } else {
+          iframeDom.onload = function () {
+            iframeWin.postMessage(
+              {
+                token: userInfoStore.token,
+                subdomain: userInfoStore.subdomain,
+              },
+              '*'
+            );
+          };
+        }
       }
     },
     { immediate: true }
   );
+});
+
+onUnmounted(() => {
+  window.removeEventListener('message', handleMessage);
 });
 </script>
 

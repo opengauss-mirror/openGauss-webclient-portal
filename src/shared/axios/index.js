@@ -1,7 +1,7 @@
-import axios from "axios";
-import handleResponse from "./handleResponse";
-import handleError from "./handleError";
-import setConfig from "./setConfig";
+import axios from 'axios';
+import handleResponse from './handleResponse';
+import handleError from './handleError';
+import setConfig from './setConfig';
 
 /**
  * intactRequest是只在axios基础上更改了请求配置。
@@ -66,10 +66,10 @@ const responseInterceptorId = request.interceptors.response.use(
         throw new axios.Cancel(
           err.message || `请求'${request.config.url}'被取消`
         );
-      } else if (err.stack && err.stack.includes("timeout")) {
-        err.message = "请求超时!";
+      } else if (err.stack && err.stack.includes('timeout')) {
+        err.message = '请求超时!';
       } else {
-        err.message = "连接服务器失败!";
+        err.message = '连接服务器失败!';
       }
     }
     return Promise.reject(err);
