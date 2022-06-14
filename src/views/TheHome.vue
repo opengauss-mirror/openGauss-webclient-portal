@@ -1,7 +1,7 @@
 <script setup>
 import { useLoginStore, useUserInfoStore } from '@/stores';
 import { doLogin } from '@/shared/login';
-import { onMounted, ref, watch } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const loginStore = useLoginStore();
@@ -28,13 +28,15 @@ onMounted(() => {
     (val) => {
       if (val) {
         clientSrc.value = userInfoStore.subdomain;
-        iframeWin.postMessage(
-          {
-            token: userInfoStore.token,
-            subdomain: userInfoStore.subdomain,
-          },
-          '*'
-        );
+        setTimeout(() => {
+          iframeWin.postMessage(
+            {
+              token: userInfoStore.token,
+              subdomain: userInfoStore.subdomain,
+            },
+            '*'
+          );
+        }, 500);
       }
     },
     { immediate: true }
