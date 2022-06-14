@@ -1,7 +1,7 @@
 import { Guard, GuardMode } from '@authing/native-js-ui-components';
 
-import { useLoginStore } from '@/stores';
-import { queryAppId } from '@/api';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+import { queryAppId, queryAuthentication, queryUserInfo } from '@/api';
 
 let guard = null;
 let authId = '';
@@ -44,6 +44,9 @@ export function saveUserAuth(id, token) {
   } else {
     localStorage.setItem(LOGIN_KEYS.USER_ID, id);
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
+    const userInfoStore = useUserInfoStore();
+    userInfoStore.id = id;
+    userInfoStore.token = token;
   }
 }
 
@@ -88,7 +91,7 @@ export async function requestUserInfo() {
     try {
       setStatus(LOGIN_STATUS.DOING);
       const res = await queryUserInfo({
-        id,
+        userId: id,
         token,
       });
 
@@ -97,7 +100,7 @@ export async function requestUserInfo() {
       } else {
         setStatus(LOGIN_STATUS.FAILED);
         saveUserAuth();
-        throw new Error(res.status + ' ' + res.msg);
+        throw new Error(res.code + ' ' + res.msg);
       }
     } catch (err) {
       setStatus(LOGIN_STATUS.FAILED);
@@ -114,14 +117,14 @@ export async function doLogin() {
       setStatus(LOGIN_STATUS.DOING);
       // 使用用户id和身份源id获取用户token及其他信息
       const res = await queryAuthentication({
-        sub: authId,
+        id: authId,
         federationIdentityId: authIdentity,
       });
 
       if (res.code === 200) {
         afterLogined(res.userInfo);
       } else {
-        throw new Error(res.status + ' ' + res.msg);
+        throw new Error(res.code + ' ' + res.msg);
       }
     } catch (error) {
       setStatus(LOGIN_STATUS.FAILED);
@@ -131,6 +134,10 @@ export async function doLogin() {
   } else {
     await requestUserInfo();
   }
+}
+
+function removeGuard() {
+  guard = null;
 }
 
 /**

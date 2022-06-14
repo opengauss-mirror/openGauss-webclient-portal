@@ -1,31 +1,67 @@
 <script setup>
-import { useLoginStore } from '@/stores';
-import { onMounted, ref, watch } from 'vue';
+import { useLoginStore, useUserInfoStore } from '@/stores';
+import { doLogin } from '@/shared/login';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 const loginStore = useLoginStore();
+const userInfoStore = useUserInfoStore();
+const router = useRouter();
 
-const clientSrc = ref('http://localhost:8081/');
+if (!loginStore.isLogined) {
+  if (localStorage.getItem('_U_T_')) {
+    doLogin();
+  } else {
+    router.push('/login');
+  }
+}
+
+const handleMessage = (data) => {
+  console.log(data);
+};
+
+const clientSrc = ref('');
 const iframeIns = ref(null);
 onMounted(() => {
+  const iframeDom = iframeIns.value;
   const iframeWin = iframeIns.value.contentWindow;
 
   watch(
     () => {
-      return loginStore.isLogined;
+      return userInfoStore.subdomain;
     },
     (val) => {
       if (val) {
-        iframeWin.postMessage(
-          {
-            id: 'id',
-            token: 'token',
-          },
-          clientSrc.value
-        );
+        clientSrc.value = userInfoStore.subdomain;
+        if (iframeDom.attachEvent) {
+          iframeDom.attachEvent('onload', function () {
+            iframeWin.postMessage(
+              {
+                token: userInfoStore.token,
+                subdomain: userInfoStore.subdomain,
+              },
+              '*'
+            );
+          });
+        } else {
+          iframeDom.onload = function () {
+            iframeWin.postMessage(
+              {
+                token: userInfoStore.token,
+                subdomain: userInfoStore.subdomain,
+              },
+              '*'
+            );
+          };
+        }
       }
     },
     { immediate: true }
   );
+});
+
+onUnmounted(() => {
+  window.removeEventListener('message', handleMessage);
 });
 </script>
 

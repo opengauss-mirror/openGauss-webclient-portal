@@ -17,16 +17,16 @@ export default (response) => {
         break;
       case 4001:
         if (process.server) return;
-        message = message || "登录设备数量超出限制";
+        message = message || '登录设备数量超出限制';
         break;
       case 403:
-        message = message || "未登录";
+        message = message || '未登录';
         break;
       case 404:
-        message = message || "请求地址错误";
+        message = message || '请求地址错误';
         break;
       case 412:
-        message = message || "未找到有效session";
+        message = message || '未找到有效session';
         break;
       default:
         break;

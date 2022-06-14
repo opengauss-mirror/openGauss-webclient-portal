@@ -4,10 +4,10 @@
  */
 export default (axios, config = {}) => {
   const defaultConfig = {
-    baseURL: "",
+    baseURL: '',
     timeout: 20000,
     headers: {
-      "Content-Type": "application/json;charset=UTF-8",
+      'Content-Type': 'application/json;charset=UTF-8',
       // "custom-defined-header-key": "custom-defined-header-value",
       // // 自定义请求头：对所有请求方法生效
       // common: {

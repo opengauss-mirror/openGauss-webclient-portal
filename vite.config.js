@@ -24,7 +24,7 @@ export default defineConfig({
     port: 1234,
     proxy: {
       '/api': {
-        target: 'https://moocstudio.opengauss.org/',
+        target: 'https://opengaussplayground.test.osinfra.cn/',
         changeOrigin: true,
       },
     },

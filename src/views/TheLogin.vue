@@ -1,9 +1,13 @@
 <script setup>
-import { goAuthorize } from '@/shared/login';
+import { doLogin, goAuthorize } from '@/shared/login';
 
 import logoImg from '@/assets/logo.png';
 
-goAuthorize();
+if (localStorage.getItem('_U_T_')) {
+  doLogin();
+} else {
+  goAuthorize();
+}
 </script>
 
 <template>
