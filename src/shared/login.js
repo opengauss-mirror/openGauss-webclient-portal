@@ -34,7 +34,7 @@ function setStatus(status) {
 }
 
 // 存储用户id及token，用于下次登录
-export function saveUserAuth(id, token) {
+export function saveUserAuth(id, token, domain) {
   if (!id && !token) {
     localStorage.removeItem(LOGIN_KEYS.USER_ID);
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
@@ -47,6 +47,7 @@ export function saveUserAuth(id, token) {
     const userInfoStore = useUserInfoStore();
     userInfoStore.id = id;
     userInfoStore.token = token;
+    userInfoStore.domain = domain;
   }
 }
 
@@ -67,7 +68,7 @@ export function getUserAuth() {
   };
 }
 
-function afterLogined(userInfo) {
+function afterLogined(userInfo, domain) {
   if (!userInfo || !userInfo.userId) {
     return;
   }
@@ -80,7 +81,7 @@ function afterLogined(userInfo) {
     return console.error('用户信息不正确！');
   }
 
-  saveUserAuth(userId, userToken);
+  saveUserAuth(userId, userToken, domain);
   setStatus(LOGIN_STATUS.DONE);
 }
 
@@ -96,7 +97,7 @@ export async function requestUserInfo() {
       });
 
       if (res.code === 200) {
-        afterLogined(res.userInfo);
+        afterLogined(res.userInfo, res.domain);
       } else {
         setStatus(LOGIN_STATUS.FAILED);
         saveUserAuth();
@@ -122,7 +123,7 @@ export async function doLogin() {
       });
 
       if (res.code === 200) {
-        afterLogined(res.userInfo);
+        afterLogined(res.userInfo, res.domain);
       } else {
         throw new Error(res.code + ' ' + res.msg);
       }
@@ -151,7 +152,7 @@ export async function initGuard() {
       if (res.code === 200) {
         // 初始化登录组件
         guard = new Guard(res.callbackInfo.appId, {
-          title: 'TryMe',
+          title: 'Tryme',
           target: '.login-form',
           mode: GuardMode.Normal,
           clickCloseable: true,

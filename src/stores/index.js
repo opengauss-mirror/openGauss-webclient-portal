@@ -41,5 +41,6 @@ export const useLoginStore = defineStore('login', {
 export const useUserInfoStore = defineStore('user', {
   id: '',
   token: '',
+  domain: '',
   subdomain: '',
 });
