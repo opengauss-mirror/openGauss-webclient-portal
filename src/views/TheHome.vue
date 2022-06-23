@@ -38,6 +38,7 @@ onMounted(() => {
             iframeWin.postMessage(
               {
                 token: userInfoStore.token,
+                domain: userInfoStore.domain,
                 subdomain: userInfoStore.subdomain,
               },
               '*'
@@ -48,6 +49,7 @@ onMounted(() => {
             iframeWin.postMessage(
               {
                 token: userInfoStore.token,
+                domain: userInfoStore.domain,
                 subdomain: userInfoStore.subdomain,
               },
               '*'
