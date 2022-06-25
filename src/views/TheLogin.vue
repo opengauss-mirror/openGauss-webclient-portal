@@ -8,12 +8,16 @@ if (localStorage.getItem('_U_T_')) {
 } else {
   goAuthorize();
 }
+
+function goPortal() {
+  window.location.href = 'https://www.opengauss.org';
+}
 </script>
 
 <template>
   <div class="login">
     <div class="login-header">
-      <img :src="logoImg" alt="" />
+      <img :src="logoImg" alt="" @click="goPortal" />
     </div>
 
     <div class="login-content">
@@ -43,6 +47,7 @@ if (localStorage.getItem('_U_T_')) {
 
     img {
       height: 30px;
+      cursor: pointer;
     }
   }
 
