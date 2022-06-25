@@ -152,7 +152,7 @@ export async function initGuard() {
       if (res.code === 200) {
         // 初始化登录组件
         guard = new Guard(res.callbackInfo.appId, {
-          title: 'Tryme',
+          title: 'openGauss TryMe',
           target: '.login-form',
           mode: GuardMode.Normal,
           clickCloseable: true,
