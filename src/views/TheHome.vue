@@ -27,7 +27,7 @@ onMounted(() => {
     },
     (val) => {
       if (val) {
-        clientSrc.value = 'http://localhost:8081/';
+        clientSrc.value = userInfoStore.subdomain;
         if (iframeDom.attachEvent) {
           iframeDom.attachEvent('onload', function () {
             iframeWin.postMessage(
