@@ -43,6 +43,17 @@ watch(
   },
   { immediate: true }
 );
+
+watch(
+  () => {
+    return loginStore.isLoginNot;
+  },
+  (val) => {
+    if (val) {
+      router.push('/login');
+    }
+  }
+);
 </script>
 
 <template>

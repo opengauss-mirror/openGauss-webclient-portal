@@ -1,23 +1,18 @@
 <script setup>
-import { useLoginStore, useUserInfoStore } from '@/stores';
-import { doLogin } from '@/shared/login';
+import { useUserInfoStore } from '@/stores';
+import { logout } from '@/shared/login';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-
-const loginStore = useLoginStore();
 const userInfoStore = useUserInfoStore();
+
 const router = useRouter();
 
-if (!loginStore.isLogined) {
-  if (localStorage.getItem('_U_T_')) {
-    doLogin();
-  } else {
-    router.push('/login');
+const handleMessage = (e) => {
+  const data = e.data;
+  if (data.events === 'logout') {
+    logout();
+    router.go('/login');
   }
-}
-
-const handleMessage = (data) => {
-  console.log(data);
 };
 
 const clientSrc = ref('');
@@ -60,6 +55,8 @@ onMounted(() => {
     },
     { immediate: true }
   );
+
+  window.addEventListener('message', handleMessage);
 });
 
 onUnmounted(() => {

@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { doLogin } from './shared/login';
+import { useLoginStore } from './stores';
 
 export const routes = [
   {
@@ -19,6 +21,16 @@ export const routes = [
     name: 'home',
     component: () => {
       return import('@/views/TheHome.vue');
+    },
+    beforeEnter: async () => {
+      const loginStore = useLoginStore();
+      if (!loginStore.isLogined) {
+        await doLogin();
+      }
+      if (!loginStore.isLogined) {
+        return { name: 'login' };
+      }
+      return true;
     },
   },
 ];

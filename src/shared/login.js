@@ -36,6 +36,7 @@ function setStatus(status) {
 // 存储用户id及token，用于下次登录
 export function saveUserAuth(id, token, domain) {
   if (!id && !token) {
+    authId = '';
     localStorage.removeItem(LOGIN_KEYS.USER_ID);
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
 
@@ -199,8 +200,8 @@ export function showLogin() {
 
 // 退出
 export function logout() {
-  setStatus(LOGIN_STATUS.NOT);
   saveUserAuth();
+  setStatus(LOGIN_STATUS.NOT);
 }
 
 // 重新登录
