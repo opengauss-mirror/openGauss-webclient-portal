@@ -31,28 +31,15 @@ watch(
           } else {
             console.error('获取课程信息错误！');
             logout();
-            goAuthorize();
           }
         });
       } catch (error) {
         console.error('获取课程信息错误！');
         logout();
-        goAuthorize();
       }
     }
   },
   { immediate: true }
-);
-
-watch(
-  () => {
-    return loginStore.isLoginNot;
-  },
-  (val) => {
-    if (val) {
-      router.push('/login');
-    }
-  }
 );
 </script>
 

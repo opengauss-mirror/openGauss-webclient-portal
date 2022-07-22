@@ -28,6 +28,18 @@ export function queryAuthentication(params) {
  * @param {*} params
  * @returns
  */
+export function queryUserTokenInfo(params) {
+  const url = '/api/playground/oauth2/callback';
+  return request.get(url, { params }).then((res) => {
+    return res.data;
+  });
+}
+
+/**
+ * 获取用户信息
+ * @param {*} params
+ * @returns
+ */
 export function queryUserInfo(params) {
   const url = '/api/playground/user/information';
   return request.get(url, { params }).then((res) => {
