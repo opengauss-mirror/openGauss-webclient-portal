@@ -6,6 +6,7 @@ import {
   getUserAuth,
   getUrlParam,
   getCodeByUrl,
+  requestUserInfo,
 } from '@/shared/login';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 const userInfoStore = useUserInfoStore();
@@ -27,6 +28,8 @@ onMounted(() => {
     getCodeByUrl();
   } else if (!id && !token) {
     goAuthorize();
+  } else {
+    requestUserInfo();
   }
   const iframeDom = iframeIns.value;
   const iframeWin = iframeIns.value.contentWindow;
