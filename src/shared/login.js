@@ -126,8 +126,8 @@ export async function requestUserInfo() {
 const redirectUri = `${location.origin}/`;
 function createClient(appId, appHost) {
   return new AuthenticationClient({
-    appId,
-    appHost,
+    appId: '621de88c40c828c2296cd1cc',
+    appHost: 'https://tryme.authing.cn',
     redirectUri,
   });
 }
