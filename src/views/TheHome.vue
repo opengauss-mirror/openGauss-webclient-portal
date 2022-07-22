@@ -1,23 +1,33 @@
 <script setup>
 import { useUserInfoStore } from '@/stores';
-import { logout } from '@/shared/login';
+import {
+  logout,
+  goAuthorize,
+  getUserAuth,
+  getUrlParam,
+  getCodeByUrl,
+} from '@/shared/login';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
 const userInfoStore = useUserInfoStore();
-
-const router = useRouter();
 
 const handleMessage = (e) => {
   const data = e.data;
   if (data.events === 'logout') {
     logout();
-    router.go('/login');
   }
 };
 
 const clientSrc = ref('');
 const iframeIns = ref(null);
+
 onMounted(() => {
+  const { id, token } = getUserAuth();
+  const query = getUrlParam();
+  if (query.code && query.state) {
+    getCodeByUrl();
+  } else if (!id && !token) {
+    goAuthorize();
+  }
   const iframeDom = iframeIns.value;
   const iframeWin = iframeIns.value.contentWindow;
 
