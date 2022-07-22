@@ -31,7 +31,6 @@ function setStatus(status) {
 // 存储用户id及token，用于下次登录
 export function saveUserAuth(token, info) {
   if (!info && !token) {
-    authId = '';
     localStorage.removeItem(LOGIN_KEYS.USER_INFO);
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
     resetStore();
