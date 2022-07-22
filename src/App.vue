@@ -2,7 +2,7 @@
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { goAuthorize, logout } from '@/shared/login';
+import { logout } from '@/shared/login';
 import { querySubdomain } from '@/api';
 import { useLoginStore, useUserInfoStore } from '@/stores';
 
@@ -21,7 +21,7 @@ watch(
       try {
         querySubdomain(
           Object.assign(config, {
-            userId: userInfoStore.id,
+            userId: String(userInfoStore.id),
             token: userInfoStore.token,
           })
         ).then((data) => {
