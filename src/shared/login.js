@@ -138,16 +138,17 @@ export async function logout() {
         res.callbackInfo.appHost
       );
       const { token } = getUserAuth();
-      const idToken = await queryIdToken({ token });
-      let logoutUrl = client1.buildLogoutUrl({
-        protocol: 'oidc',
-        expert: true,
-        redirectUri: `${location.origin}/login`,
-        idToken: idToken,
+      queryIdToken({ token }).then((idToken) => {
+        const logoutUrl = client1.buildLogoutUrl({
+          protocol: 'oidc',
+          expert: true,
+          redirectUri: `${location.origin}/login`,
+          idToken,
+        });
+        setStatus(LOGIN_STATUS.NOT);
+        saveUserAuth();
+        location.href = logoutUrl;
       });
-      setStatus(LOGIN_STATUS.NOT);
-      saveUserAuth();
-      location.href = logoutUrl;
     }
   });
 }
