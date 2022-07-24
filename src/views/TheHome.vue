@@ -1,13 +1,6 @@
 <script setup>
 import { useUserInfoStore } from '@/stores';
-import {
-  logout,
-  goAuthorize,
-  getUserAuth,
-  getUrlParam,
-  getCodeByUrl,
-  requestUserInfo,
-} from '@/shared/login';
+import { logout } from '@/shared/login';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 const userInfoStore = useUserInfoStore();
 
@@ -22,15 +15,6 @@ const clientSrc = ref('');
 const iframeIns = ref(null);
 
 onMounted(() => {
-  const { id, token } = getUserAuth();
-  const query = getUrlParam();
-  if (query.code && query.state) {
-    getCodeByUrl();
-  } else if (!id && !token) {
-    goAuthorize();
-  } else {
-    requestUserInfo();
-  }
   const iframeDom = iframeIns.value;
   const iframeWin = iframeIns.value.contentWindow;
 
@@ -49,7 +33,7 @@ onMounted(() => {
                 domain: userInfoStore.domain,
                 subdomain: userInfoStore.subdomain,
               },
-              '*'
+              userInfoStore.subdomain
             );
           });
         } else {
@@ -60,7 +44,7 @@ onMounted(() => {
                 domain: userInfoStore.domain,
                 subdomain: userInfoStore.subdomain,
               },
-              '*'
+              userInfoStore.subdomain
             );
           };
         }

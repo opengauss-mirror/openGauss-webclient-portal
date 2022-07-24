@@ -21,7 +21,6 @@ watch(
       try {
         querySubdomain(
           Object.assign(config, {
-            userId: String(userInfoStore.id),
             token: userInfoStore.token,
           })
         ).then((data) => {

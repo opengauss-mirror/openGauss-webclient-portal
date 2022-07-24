@@ -24,7 +24,7 @@ export default defineConfig({
     port: 1234,
     proxy: {
       '/api': {
-        target: 'https://opengaussplayground.test.osinfra.cn/',
+        target: 'https://tryme.test.osinfra.cn/',
         changeOrigin: true,
       },
     },

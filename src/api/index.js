@@ -12,13 +12,12 @@ export function queryAppId() {
 }
 
 /**
- * 获取token及用户信息
- * @param {Object} params {id:'', federationIdentityId: ''}
+ * 获取idtoken
  * @returns
  */
-export function queryAuthentication(params) {
-  const url = `/api/playground/oauth2/authentication`;
-  return request.post(url, params).then((res) => {
+export function queryIdToken(params) {
+  const url = `/api/playground/user/getIdToken`;
+  return request.get(url, { params }).then((res) => {
     return res.data;
   });
 }
