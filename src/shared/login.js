@@ -1,6 +1,11 @@
 import { AuthenticationClient } from 'authing-js-sdk';
 import { useLoginStore, useUserInfoStore } from '@/stores';
-import { queryAppId, queryUserInfo, queryUserTokenInfo } from '@/api';
+import {
+  queryAppId,
+  queryIdToken,
+  queryUserInfo,
+  queryUserTokenInfo,
+} from '@/api';
 
 // 登录事件
 export const LOGIN_EVENTS = {
@@ -29,27 +34,25 @@ function setStatus(status) {
 }
 
 // 存储用户id及token，用于下次登录
-export function saveUserAuth(token, info) {
-  if (!info && !token) {
-    localStorage.removeItem(LOGIN_KEYS.USER_INFO);
+export function saveUserAuth(token) {
+  if (!token) {
     localStorage.removeItem(LOGIN_KEYS.USER_TOKEN);
     resetStore();
   } else {
-    localStorage.setItem(LOGIN_KEYS.USER_INFO, JSON.stringify(info));
     localStorage.setItem(LOGIN_KEYS.USER_TOKEN, token);
   }
 }
 
-function initStore(token, id, domain) {
-  if (!id && !token) {
+function initStore(token, domain) {
+  if (!token) {
     resetStore();
   } else {
     const userInfoStore = useUserInfoStore();
-    userInfoStore.id = id;
     userInfoStore.token = token;
     userInfoStore.domain = domain;
   }
 }
+
 function resetStore() {
   const userInfoStore = useUserInfoStore();
   userInfoStore.$reset();
@@ -58,58 +61,39 @@ function resetStore() {
 // 获取用户id及token
 export function getUserAuth() {
   let token = localStorage.getItem(LOGIN_KEYS.USER_TOKEN);
-  let _info = localStorage.getItem(LOGIN_KEYS.USER_INFO);
-  let userInfo;
-  let id;
-  try {
-    userInfo = JSON.parse(_info) || {};
-  } catch (error) {
-    userInfo = {};
-  }
-  if (token === 'undefined' || _info === 'undefined') {
+
+  if (token === 'undefined') {
     saveUserAuth();
     token = '';
-    id = 0;
-  } else {
-    id = parseInt(userInfo.sub);
   }
   return {
-    userInfo,
-    id,
     token,
   };
 }
 
-function afterLogined(userInfo, domain) {
-  if (!userInfo || !userInfo.userId) {
-    return;
-  }
-
-  const { userId, userToken } = userInfo;
-
-  if (!userId || !userToken) {
+function afterLogined(token, domain) {
+  if (!token) {
     setStatus(LOGIN_STATUS.FAILED);
     saveUserAuth();
     return console.error('用户信息不正确！');
   }
 
-  initStore(userToken, userId, domain);
+  initStore(token, domain);
   setStatus(LOGIN_STATUS.DONE);
 }
 
 // 请求用户信息
 export async function requestUserInfo() {
-  const { id, token } = getUserAuth();
-  if (id && token) {
+  const { token } = getUserAuth();
+  if (token) {
     try {
       setStatus(LOGIN_STATUS.DOING);
       const res = await queryUserInfo({
-        userId: id,
         token,
       });
 
       if (res.code === 200) {
-        afterLogined(res.userInfo, res.domain);
+        afterLogined(token, res.domain);
       } else {
         setStatus(LOGIN_STATUS.FAILED);
         saveUserAuth();
@@ -123,32 +107,26 @@ export async function requestUserInfo() {
   }
 }
 
-const redirectUri = `${location.origin}/`;
 function createClient(appId, appHost) {
   return new AuthenticationClient({
-    appId: '621de88c40c828c2296cd1cc',
-    appHost: 'https://tryme.authing.cn',
-    redirectUri,
+    appId,
+    appHost,
+    redirectUri: `${window.location.href}/`,
   });
 }
 // 开始鉴权
 export async function goAuthorize() {
-  queryAppId().then((res) => {
-    if (res.code === 200) {
-      const client = createClient(
-        res.callbackInfo.appId,
-        res.callbackInfo.appHost
-      );
-      // 构造 OIDC 授权登录 URL
-      let url = client.buildAuthorizeUrl();
-      // 如果需要获取 Refresh token，请在 scope 中加入 offline_access 项
-      let url2 = client.buildAuthorizeUrl({
-        scope: 'openid profile offline_access',
-      });
-      location.href = url;
-      url2;
-    }
-  });
+  const res = await queryAppId();
+  if (res.code === 200) {
+    const client = createClient(
+      res.callbackInfo.appId,
+      res.callbackInfo.appHost
+    );
+    // 构造 OIDC 授权登录 URL
+    const url = client.buildAuthorizeUrl();
+    const userInfoStore = useUserInfoStore();
+    userInfoStore.loginUrl = url;
+  }
 }
 
 // 退出
@@ -159,12 +137,13 @@ export function logout() {
         res.callbackInfo.appId,
         res.callbackInfo.appHost
       );
-      const { userInfo } = getUserAuth();
+      const { token } = getUserAuth();
+      const idToken = queryIdToken({ token });
       let logoutUrl = client1.buildLogoutUrl({
         protocol: 'oidc',
         expert: true,
-        redirectUri,
-        idToken: userInfo.idtoken,
+        redirectUri: `${location.origin}/login`,
+        idToken: idToken,
       });
       setStatus(LOGIN_STATUS.NOT);
       saveUserAuth();
@@ -173,29 +152,19 @@ export function logout() {
   });
 }
 
-export function getCodeByUrl() {
+export async function getCodeByUrl() {
   const query = getUrlParam();
   if (query.code && query.state) {
     const param = {
       code: query.code,
       state: query.state,
     };
-    queryUserTokenInfo(param).then((res) => {
-      const {
-        token = '',
-        idtoken = '',
-        user: { sub = '' },
-      } = res;
-      saveUserAuth(token, { sub, idtoken });
-      // 去掉url中的code
-      let newUrl = location.origin;
-      if (window.history.replaceState) {
-        window.history.replaceState({}, '', newUrl);
-      } else {
-        window.location.href = newUrl;
-      }
-      requestUserInfo();
-    });
+    const res = await queryUserTokenInfo(param);
+    const { token = '' } = res;
+    saveUserAuth(token);
+    const newUrl = `${location.origin}/login`;
+    window.location.href = null;
+    window.parent.window.location.href = newUrl;
   }
 }
 
