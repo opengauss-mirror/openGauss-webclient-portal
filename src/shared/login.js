@@ -138,7 +138,7 @@ export function logout() {
         res.callbackInfo.appHost
       );
       const { token } = getUserAuth();
-      const idToken = queryIdToken({ token });
+      const idToken = await queryIdToken({ token });
       let logoutUrl = client1.buildLogoutUrl({
         protocol: 'oidc',
         expert: true,
