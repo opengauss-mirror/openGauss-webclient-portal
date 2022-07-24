@@ -130,7 +130,7 @@ export async function goAuthorize() {
 }
 
 // 退出
-export function logout() {
+export async function logout() {
   queryAppId().then((res) => {
     if (res.code === 200) {
       const client1 = createClient(
