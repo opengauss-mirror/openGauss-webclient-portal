@@ -25,6 +25,7 @@ watch(
           })
         ).then((data) => {
           if (data.code === 200) {
+            userInfoStore.loginUrl = '';
             userInfoStore.subdomain = data.instanceInfo.endPoint;
             router.push('/home');
           } else {
