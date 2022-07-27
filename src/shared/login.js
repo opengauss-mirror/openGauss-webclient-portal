@@ -163,8 +163,7 @@ export async function getCodeByUrl() {
     const res = await queryUserTokenInfo(param);
     const { token = '' } = res;
     saveUserAuth(token);
-    const newUrl = `${location.origin}/login`;
-    window.location.href = null;
+    const newUrl = `${location.origin}`;
     window.parent.window.location.href = newUrl;
   }
 }
