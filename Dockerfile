@@ -8,7 +8,7 @@ RUN pnpm install
 
 RUN pnpm build
 
-FROM nginx:1.20.0
+FROM nginx:1.23.3
 
 # COPY ./deploy/test-login.html /usr/share/nginx/html/test-login.html
 
